@@ -1,0 +1,5 @@
+<% if @source_proxy.empty? %>
+##
+<% else %>
+Acquire::http::Proxy "<%= @source_proxy %>";
+<% end %>

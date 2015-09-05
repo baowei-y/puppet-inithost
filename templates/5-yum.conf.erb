@@ -1,0 +1,21 @@
+[main]
+cachedir=/var/cache/yum
+keepcache=0
+debuglevel=2
+logfile=/var/log/yum.log
+distroverpkg=redhat-release
+tolerant=1
+exactarch=1
+obsoletes=1
+gpgcheck=1
+plugins=1
+metadata_expire=1h
+<% if @operatingsystem == 'CentOS' -%>
+bugtracker_url=http://bugs.centos.org/yum5bug
+installonly_limit = 5
+<% end -%>
+<% if @source_proxy.empty? %>
+##
+<% else %>
+proxy=<%= @source_proxy %>
+<% end %>
