@@ -14,6 +14,7 @@ class inithost (
   $init_env_ensure     = 'present',
   $ulimit_nofile       = "1048576",
   $ulimit_noproc       = "1048576",
+  $stage               = 'setup'
 ) inherits ::inithost::params {
 
 #

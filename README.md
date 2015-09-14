@@ -195,10 +195,10 @@ ubuntu12.04/14.04、rhel/centos(5/6)
 设置ulimit noproc值，有效值类型为正整数； 默认值：1048576
 ```
 
+### `stage`
+```
+执行顺序，见stdlib::stages
+```
 ## Limitations
 
-目前仅支持系统如下：rhel/centos(5/6) , ubuntu12.04/14.04
-
-## Development
-
-## Release Notes/Contributors/Etc **Optional**
+目前仅支持系统如下：rhel/centos(5/6) , ubuntu(10.04/12.04/14.04)

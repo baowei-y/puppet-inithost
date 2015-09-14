@@ -1,5 +1,6 @@
 class inithost::params {
   
+  $base_cmd_path  = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
   $init_env       = '/etc/profile.d/bw-y-env.sh'
   $init_env_temp  = 'inithost/bw-y-env.sh.erb'
   $timezone_file  = '/etc/localtime'
@@ -10,8 +11,8 @@ class inithost::params {
     'ftp', 'lftp', 'wget', 'curl', 'elinks', 'iftop', 'openssl', 'ethtool', 'rsync',
     'rdate'
   ]
-  case $::osfamily { 
-    'Debian' : {
+  case $::operatingsystem { 
+    'Ubuntu' : {
       $source_proxy_file     = '/etc/apt/apt.conf.d/02proxy'
       $source_proxy_temp     = 'inithost/ubuntu_proxy_conf.erb'
       $base_lang_file        = '/etc/default/locale'
@@ -24,23 +25,13 @@ class inithost::params {
       $base_lang_cmd         = '/usr/sbin/locale-gen'
       $ulimit_sh_file        = '/etc/profile.d/ulimit.sh'
       $ulimit_sh_temp        = 'inithost/ulimit.sh.erb'
-      if $::operatingsystem == 'Ubuntu' { 
-        $base_cmd_path       = '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games'
-        $base_update_cmd     = 'apt-get update'
-        $source_file         = '/etc/apt/sources.list'
-        
-        $public_pkgs         = [ 'command-not-found', 'locales', 'vim', 'ntpdate' ]
-        if $::operatingsystemrelease == '12.04' {
-          $source_file_temp  = 'inithost/ubt12.04-sources.list.erb'
-          $base_pkgs         = flatten([$packages, $public_pkgs ])
-        }
-        if $::operatingsystemrelease == '14.04' {
-          $source_file_temp  = 'inithost/ubt14.04-sources.list.erb'
-          $base_pkgs         = flatten([$packages, $public_pkgs])
-        }
-      }
+      $source_file_temp      = 'inithost/ubuntu_source.list.erb'
+      $source_file           = '/etc/apt/sources.list'
+      $base_update_cmd       = 'apt-get update'
+      $public_pkgs           = [ 'command-not-found', 'locales', 'vim', 'ntpdate' ]
+      $base_pkgs             = flatten([$packages, $public_pkgs])
     }
-    'RedHat' : {
+    'RedHat','CentOS' : {
       $base_update_cmd       = 'yum clean all && yum makecache'
       $base_lang_file        = '/etc/sysconfig/i18n'
       $base_lang_temp        = 'inithost/rpm-lang.erb'
@@ -70,13 +61,6 @@ class inithost::params {
         $source_epel_temp    = 'inithost/6-epel.repo.erb'
         $private_pkgs        = [ 'ntpdate' ]
         $base_pkgs           = flatten([$packages, $public_pkgs, $private_pkgs])
-
-        if $::operatingsystem == 'RedHat' {
-          $base_cmd_path   = '/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin'
-        }
-        if $::operatingsystem == 'CentOS' {
-          $base_cmd_path   = '/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin'
-        }
       }
     }
     default: {
